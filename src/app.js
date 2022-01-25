@@ -57,6 +57,7 @@ App = {
     App.setLoading(false);
   },
 
+
   renderTasks: async () => {
     const taskCount = await App.todoList.taskCount();
     const $taskTemplate = $(".taskTemplate");
@@ -72,8 +73,8 @@ App = {
       $newTaskTemplate
         .find("input")
         .prop("name", taskId)
-        .prop("checked", taskCompleted);
-      // .on('click', App.toggleCompleted)
+        .prop("checked", taskCompleted)
+        .on('click', App.toggleCompleted)
 
       if (taskCompleted) {
         $("#completedTaskList").append($newTaskTemplate);
@@ -94,6 +95,15 @@ App = {
     window.location.reload()
   },
 
+  toggleCompleted: async (e) => {
+    App.setLoading(true)
+    const taskId = e.target.name
+    await App.todoList.toggleCompleted(taskId, {
+      from: App.account
+    })
+    window.location.reload()
+  },
+
   setLoading: (boolean) => {
     App.loading = boolean;
     const loader = $("#loader");
@@ -108,8 +118,4 @@ App = {
   },
 };
 
-$(() => {
-  $(window).load(() => {
-    App.load();
-  });
-});
+$(() => $(window).load(() => App.load()));
